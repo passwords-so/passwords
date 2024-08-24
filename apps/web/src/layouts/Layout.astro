@@ -1,0 +1,83 @@
+---
+// import Footer from "../components/Footer.astro";
+import "../styles/global.css";
+import { ViewTransitions } from "astro:transitions";
+
+interface Props {
+    title: string;
+    description?: string;
+    ogImage?: string;
+    showFooter?: boolean;
+    showNavbar?: boolean;
+}
+
+const { title, description, ogImage, showFooter = true } = Astro.props as Props;
+---
+
+<!doctype html>
+<html lang="en">
+    <head>
+        <!-- start analytics -->
+        <script defer data-domain="passwords.kyle.so" src="https://analytics.kyle.so/js/script.js"
+        ></script>
+        <!-- end analytics -->
+
+        <!-- start meta -->
+        <meta charset="UTF-8" />
+        <meta
+            name="description"
+            content={description
+                ? description
+                : "A self-hosted, end-to-end encrypted, and open-source password manager."}
+        />
+        <meta name="viewport" content="width=device-width" />
+        <link rel="icon" type="image/x-icon" href="/favicon.svg" />
+        <meta name="generator" content={Astro.generator} />
+        <meta name="robots" content="index, follow" />
+        <meta name="keywords" content="passwords," />
+        <!-- end meta -->
+
+        <!-- start open graph -->
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content={title} />
+        <meta
+            property="og:description"
+            content={description ||
+                "A self-hosted, end-to-end encrypted, and open-source password manager."}
+        />
+        <meta property="og:image" content={ogImage || "/og-image.png"} />
+        <meta property="og:url" content={Astro.url} />
+        <!-- end open graph -->
+
+        <!-- start twitter -->
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:site" content="@kyledickeyy" />
+        <meta name="twitter:creator" content="@kyledickeyy" />
+        <meta name="twitter:title" content={title} />
+        <meta
+            name="twitter:description"
+            content={description ||
+                "A self-hosted, end-to-end encrypted, and open-source password manager."}
+        />
+        <meta name="twitter:image" content={ogImage || "/og-image.png"} />
+        <!-- end twitter -->
+
+        <title>{title}</title>
+    </head>
+    <body
+        class="m-0
+            flex
+            min-h-screen
+            flex-col
+            p-0
+            w-full
+            items-center
+            justify-center"
+    >
+        <ViewTransitions />
+    </body>
+    <main class="flex flex-grow items-center justify-center w-full">
+        <slot />
+    </main>
+    <!-- {showFooter && <Footer />} -->
+</html>

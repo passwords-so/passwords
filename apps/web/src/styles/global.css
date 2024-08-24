@@ -1,0 +1,126 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+    font-family: "Newsreader";
+    src: url("/fonts/newsreader-variable.ttf") format("truetype");
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Newsreader";
+    src: url("/fonts/newsreader-italic-variable.ttf") format("truetype");
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Geist";
+    src: url("/fonts/geist-variable.ttf") format("truetype");
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Geist Mono";
+    src: url("/fonts/geist-mono-variable.ttf") format("truetype");
+    font-style: normal;
+    font-display: swap;
+}
+
+@layer base {
+    :root {
+        --background: 0 0% 7%;
+        --foreground: 0 0% 98%;
+        --card: 240 10% 3.9%;
+        --card-foreground: 0 0% 98%;
+        --popover: 240 10% 3.9%;
+        --popover-foreground: 0 0% 98%;
+        --primary: 0 0% 98%;
+        --primary-foreground: 240 5.9% 10%;
+        --secondary: 240 3.7% 15.9%;
+        --secondary-foreground: 0 0% 98%;
+        --muted: 240 3.7% 15.9%;
+        --muted-foreground: 240 5% 64.9%;
+        --accent: 240 3.7% 15.9%;
+        --accent-foreground: 0 0% 98%;
+        --destructive: 0 62.8% 30.6%;
+        --destructive-foreground: 0 0% 98%;
+        --border: 240 3.7% 15.9%;
+        --input: 240 3.7% 15.9%;
+        --ring: 240 4.9% 83.9%;
+        --chart-1: 220 70% 50%;
+        --chart-2: 160 60% 45%;
+        --chart-3: 30 80% 55%;
+        --chart-4: 280 65% 60%;
+        --chart-5: 340 75% 55%;
+    }
+}
+
+@layer base {
+    * {
+        @apply border-[hsl(var(--border))];
+    }
+
+    body {
+        /* @apply bg-background text-foreground; */
+        @apply bg-[hsl(var(--background))] text-[hsl(var(--foreground))];
+        margin: 0;
+        padding: 0;
+        overflow-x: hidden;
+    }
+
+    html {
+        margin: 0;
+        padding: 0;
+        overflow-x: hidden;
+    }
+
+    [type="number"]::-webkit-inner-spin-button,
+    [type="number"]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+    [type="number"] {
+        -moz-appearance: textfield;
+    }
+
+    .glass-blur::before {
+        backdrop-filter: blur(8px) contrast(100%);
+        -webkit-backdrop-filter: blur(8px) contrast(100%);
+    }
+
+    .glass-blur {
+        backdrop-filter: blur(8px) contrast(100%);
+        -webkit-backdrop-filter: blur(8px) contrast(100%);
+    }
+
+    ::selection {
+        @apply bg-card-foreground/20;
+        @apply text-foreground/40;
+    }
+}
+
+/* width */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0);
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 1rem;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.8);
+}
