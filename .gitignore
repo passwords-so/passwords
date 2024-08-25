@@ -1,0 +1,4 @@
+# Globals
+.env.*
+apps/**/**/.env
+apps/**/**/node_modules
