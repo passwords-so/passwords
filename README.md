@@ -1,4 +1,4 @@
-# passwords.kyle.so
+# passwords.so
 
 A self-hosted, end-to-end encrypted, and open-source password manager.
 
