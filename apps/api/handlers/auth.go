@@ -19,10 +19,79 @@ func RegisterAuthRoutes(router *gin.RouterGroup) {
 }
 
 // POST /api/auth/login
+type LoginBody struct {
+	Email    string `json:"email"`
+	Password string `json:"password"`
+}
+
 func Login(c *gin.Context) {
-	// just return hello world for now
+	// get the json body
+	var user LoginBody
+	if err := c.ShouldBindJSON(&user); err != nil {
+		c.JSON(400, gin.H{
+			"message": "invalid request body",
+		})
+		return
+	}
+
+	// validate all fields
+	if user.Email == "" || user.Password == "" {
+		c.JSON(400, gin.H{
+			"message": "missing fields",
+		})
+		return
+	}
+
+	// check if the user exists
+	if taken, _ := storage.IsEmailTaken(c, user.Email); !taken {
+		c.JSON(400, gin.H{
+			"message": "email not found",
+		})
+		return
+	}
+
+	// get the user by email
+	userInDB, err := storage.GetUserByEmail(c, user.Email)
+	if err != nil {
+		log.Error().Err(err).Msg("failed to get user by email")
+		c.JSON(500, gin.H{
+			"message": "failed to get user",
+		})
+		return
+	}
+
+	// validate the password
+	valid, err := lib.ComparePasswordAndHash(user.Password, userInDB.Password)
+	if err != nil {
+		log.Error().Err(err).Msg("failed to compare passwords")
+		c.JSON(500, gin.H{
+			"message": "failed to compare passwords",
+		})
+		return
+	}
+
+	if !valid {
+		c.JSON(400, gin.H{
+			"message": "invalid password",
+		})
+		return
+	}
+
+	// generate the jwt
+	jwt, err := lib.GenerateJWT(userInDB.ID)
+	if err != nil {
+		log.Error().Err(err).Msg("failed to generate jwt")
+		c.JSON(500, gin.H{
+			"message": "failed to generate jwt",
+		})
+		return
+	}
+
+	// return the user
 	c.JSON(200, gin.H{
-		"message": "hello world",
+		"user":    gin.H{"id": userInDB.ID, "email": userInDB.Email},
+		"token":   jwt,
+		"message": "login successful",
 	})
 }
 
@@ -85,9 +154,20 @@ func Register(c *gin.Context) {
 		return
 	}
 
-	// just return hello world for now
+	// generate the jwt
+	jwt, err := lib.GenerateJWT(userModel.ID)
+	if err != nil {
+		log.Error().Err(err).Msg("failed to generate jwt")
+		c.JSON(500, gin.H{
+			"message": "failed to generate jwt",
+		})
+		return
+	}
+
+	// return the user
 	c.JSON(200, gin.H{
 		"user":    gin.H{"id": userID, "email": user.Email},
+		"token":   jwt,
 		"message": "user created",
 	})
 }
