@@ -1,5 +1,3 @@
-// File: log/log.go
-
 package log
 
 import (
