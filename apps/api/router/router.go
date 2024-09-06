@@ -9,9 +9,11 @@ import (
 func SetupRouter() *gin.Engine {
 	router := gin.Default()
 
+	// register routes
 	api := router.Group("/api")
 	{
 		handlers.RegisterAuthRoutes(api)
+		handlers.RegisterUserRoutes(api)
 	}
 
 	return router

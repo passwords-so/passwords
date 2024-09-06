@@ -26,7 +26,7 @@ func init() {
 	// set environment
 	if os.Getenv("ENVIRONMENT") != "" {
 		enviornment = os.Getenv("ENVIRONMENT")
-		log.Info().Msgf("environment set to %s", enviornment)
+		log.Debug().Msgf("environment set to %s", enviornment)
 	}
 
 }

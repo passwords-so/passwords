@@ -11,10 +11,10 @@ import (
 )
 
 func RegisterAuthRoutes(router *gin.RouterGroup) {
-	auth := router.Group("/auth")
+	r := router.Group("/auth")
 	{
-		auth.POST("/login", Login)
-		auth.POST("/register", Register)
+		r.POST("/login", Login)
+		r.POST("/register", Register)
 	}
 }
 

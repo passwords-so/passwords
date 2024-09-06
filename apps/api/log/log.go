@@ -11,7 +11,6 @@ var log zerolog.Logger
 
 func init() {
 	log = zerolog.New(zerolog.ConsoleWriter{Out: os.Stderr, TimeFormat: time.RFC3339}).With().Timestamp().Caller().Logger()
-
 }
 
 // fields is a map of field names to values
