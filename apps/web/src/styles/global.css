@@ -56,6 +56,7 @@
         --chart-3: 30 80% 55%;
         --chart-4: 280 65% 60%;
         --chart-5: 340 75% 55%;
+        --radius: 0.75rem;
     }
 }
 
@@ -123,4 +124,30 @@
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
     background: rgba(0, 0, 0, 0.8);
+}
+@layer base {
+    * {
+        @apply border-border;
+    }
+    body {
+        @apply bg-background text-foreground;
+    }
+}
+
+.prose-docs {
+    @apply prose;
+    @apply prose-h1:text-4xl prose-h2:text-3xl prose-h3:text-2xl prose-h4:text-xl prose-h5:text-lg prose-h6:text-sm;
+    @apply prose-headings:text-foreground prose-headings:font-serif prose-headings:font-normal;
+    @apply prose-h1:italic;
+    @apply prose-headings:m-0 prose-headings:mb-4 prose-headings:mt-11 prose-h1:mt-12 prose-p:mt-2 prose-p:mb-6;
+    @apply prose-p:text-foreground/75;
+    @apply hover:prose-a:text-foreground prose-a:text-foreground/80 underline-offset-4;
+    @apply prose-strong:text-foreground/80 prose-ul:list-disc prose-ol:list-decimal prose-li:text-foreground/60;
+    @apply max-w-3xl;
+    @apply prose-code:text-foreground/80 prose-code:font-mono prose-code:before:content-[''] prose-code:after:content-[''];
+    @apply prose-em:text-foreground/40;
+}
+
+.prose-docs :not(pre) > code {
+    @apply rounded bg-white/10 px-1 py-0.5;
 }

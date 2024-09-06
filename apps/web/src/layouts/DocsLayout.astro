@@ -1,5 +1,6 @@
 ---
 // import Footer from "../components/Footer.astro";
+import DocsSidebar from "../components/DocsSidebar.astro";
 import "../styles/global.css";
 import { ViewTransitions } from "astro:transitions";
 
@@ -64,9 +65,10 @@ const { title, description, ogImage, showFooter = true } = Astro.props as Props;
 
         <title>{title}</title>
     </head>
-    <body class="m-0 flex min-h-screen w-full flex-col items-center justify-center p-0">
+    <body class="min-w-screen m-0 flex min-h-screen flex-col items-center justify-center p-0">
         <!-- <ViewTransitions /> -->
-        <main class="flex w-full flex-grow items-center justify-center">
+        <DocsSidebar />
+        <main class="flex w-screen flex-grow items-start justify-center">
             <slot />
         </main>
         <!-- {showFooter && <Footer />} -->

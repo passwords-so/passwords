@@ -1,0 +1,38 @@
+---
+import { getCollection } from "astro:content";
+
+// get all the docs
+const docs = await getCollection("docs");
+
+// organize by category
+const docsByCategory = docs.reduce((acc: any, doc: any) => {
+    if (!acc[doc.data.category]) {
+        acc[doc.data.category] = [];
+    }
+    acc[doc.data.category].push(doc);
+    return acc;
+}, {});
+---
+
+<aside class="fixed left-0 top-0 hidden lg:block">
+    <nav class="flex h-screen flex-col overflow-y-auto px-4 py-2 pt-6">
+        <!-- loop through the docs by category -->
+        {
+            Object.keys(docsByCategory).map((category) => (
+                <div class="flex flex-col">
+                    <p class="font-serif text-lg font-normal">
+                        {category[0].toUpperCase() + category.slice(1)}
+                    </p>
+                    {docsByCategory[category].map((doc: any) => (
+                        <a
+                            href={`/docs/${doc.slug}`}
+                            class="text-foreground/60 flex items-center gap-2 rounded-md px-4 py-2 hover:bg-zinc-800"
+                        >
+                            <p class="text-sm">{doc.data.title}</p>
+                        </a>
+                    ))}
+                </div>
+            ))
+        }
+    </nav>
+</aside>

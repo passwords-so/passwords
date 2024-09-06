@@ -10,8 +10,15 @@ export default defineConfig({
     adapter: vercel(),
     integrations: [
         tailwind({
-            applyBaseStyles: true
+            applyBaseStyles: false
         }),
         react()
-    ]
+    ],
+    markdown: {
+        shikiConfig: {
+            // https://shiki.style/themes
+            theme: "dracula",
+            wrap: true
+        }
+    }
 });
