@@ -23,7 +23,7 @@ func ConnectDB(ctx context.Context) {
 
 	err := DB.Ping(ctx)
 	if err != nil {
-		log.Error().Err(err).Msg("Failed to connect to database")
+		log.Error().Err(err).Msg("failed to connect to database")
 		os.Exit(1)
 	}
 
@@ -57,9 +57,9 @@ func createSchema(db *pg.DB) error {
 		if err != nil {
 			return err
 		}
-		log.Info().Msg("Users table created successfully")
+		log.Debug().Msg("users table created successfully")
 	} else {
-		log.Info().Msg("Users table already exists")
+		log.Debug().Msg("users table already exists")
 	}
 
 	return nil

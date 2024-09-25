@@ -1,5 +1,6 @@
 package structs
 
+// Main user struct
 type User struct {
 	ID       string `json:"id" pg:"id,notnull,pk,type:'uuid'"`
 	Email    string `json:"email" pg:"email,notnull,unique"`

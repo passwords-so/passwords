@@ -19,7 +19,7 @@ func CreateUser(ctx context.Context, user *structs.User) error {
 	return err
 }
 
-func GetUser(ctx context.Context, id int) (*structs.User, error) {
+func GetUser(ctx context.Context, id string) (*structs.User, error) {
 	var user structs.User
 	err := services.DB.Model(&structs.User{}).Where("id = ?", id).Select(&user)
 	return &user, err
@@ -31,14 +31,13 @@ func GetUserByEmail(ctx context.Context, email string) (*structs.User, error) {
 	return &user, err
 }
 
-func GetUsers(ctx context.Context) ([]*structs.User, error) {
-	var users []*structs.User
-	err := services.DB.Model(&structs.User{}).Select(&users)
-	return users, err
-}
-
 func UpdateUser(ctx context.Context, user *structs.User) error {
 	_, err := services.DB.Model(&structs.User{}).Where("id = ?", user.ID).Update(user)
+	return err
+}
+
+func DeleteUser(ctx context.Context, id string) error {
+	_, err := services.DB.Model(&structs.User{}).Where("id = ?", id).Delete()
 	return err
 }
 

@@ -16,28 +16,3 @@ func GenerateJWT(userID string) (string, error) {
 
 	return token.SignedString([]byte(JWTSecret))
 }
-
-func ValidateJWT(tokenString string) (string, error) {
-	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
-		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
-			return nil, jwt.ErrInvalidKeyType
-		}
-		return []byte(JWTSecret), nil
-	})
-
-	if err != nil {
-		return "", err
-	}
-
-	claims, ok := token.Claims.(jwt.MapClaims)
-	if !ok {
-		return "", jwt.ErrTokenInvalidClaims
-	}
-
-	userID, ok := claims["user_id"].(string)
-	if !ok {
-		return "", jwt.ErrTokenInvalidClaims
-	}
-
-	return userID, nil
-}
