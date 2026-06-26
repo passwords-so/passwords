@@ -17,5 +17,5 @@ type Backend interface {
 	RevealPassword(ctx context.Context, id string) ([]byte, error)
 }
 
-// NewBackend wires the CLI to storage and the vault service.
+// NewBackend wires the CLI to SQLite storage and the vault service.
 func NewBackend(vaultPath string) (Backend, error)
