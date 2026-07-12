@@ -1,4 +1,4 @@
-package vaultcrypto
+package envelope
 
 // KDFParams records how the master password is turned into key material.
 type KDFParams struct {

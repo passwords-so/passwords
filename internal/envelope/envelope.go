@@ -1,4 +1,4 @@
-package vaultcrypto
+package envelope
 
 // Envelope is an encrypted byte payload plus the metadata needed to decrypt it.
 type Envelope struct {
