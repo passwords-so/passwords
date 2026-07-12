@@ -1,5 +1,11 @@
 package main
 
+import (
+	"os"
+
+	"github.com/novembersoftware/passwords/cmd/cli"
+)
+
 func main() {
-	cmd.Execute()
+	os.Exit(cli.Execute())
 }
