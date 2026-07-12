@@ -4,7 +4,7 @@ import (
 	"context"
 	"time"
 
-	"github.com/novembersoftware/passwords/internal/vaultcrypto"
+	"github.com/novembersoftware/passwords/internal/envelope"
 )
 
 // Store is the persistence boundary used by the vault backend.
@@ -22,8 +22,8 @@ type VaultHeader struct {
 	ID         string
 	Name       string
 	Version    int
-	KDF        vaultcrypto.KDFParams
-	WrappedKey vaultcrypto.Envelope
+	KDF        envelope.KDFParams
+	WrappedKey envelope.Envelope
 	CreatedAt  time.Time
 	UpdatedAt  time.Time
 }
@@ -33,7 +33,7 @@ type EncryptedItemRecord struct {
 	ID        string
 	Kind      string
 	Version   int
-	Envelope  vaultcrypto.Envelope
+	Envelope  envelope.Envelope
 	CreatedAt time.Time
 	UpdatedAt time.Time
 }
