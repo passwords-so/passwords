@@ -18,4 +18,6 @@ type Backend interface {
 }
 
 // NewBackend wires the CLI to SQLite storage and the vault service.
-func NewBackend(vaultPath string) (Backend, error)
+func NewBackend(vaultPath string) (Backend, error) {
+	return nil, nil
+}

@@ -11,4 +11,6 @@ type KDFParams struct {
 }
 
 // DeriveKey derives key material from a password using the given KDF parameters.
-func DeriveKey(password []byte, params KDFParams) ([]byte, error)
+func DeriveKey(password []byte, params KDFParams) ([]byte, error) {
+	return nil, nil
+}

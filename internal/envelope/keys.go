@@ -45,4 +45,6 @@ func WrapKey(kek []byte, vaultKey []byte) (Envelope, error) {
 }
 
 // UnwrapKey decrypts the vault key with a key-encryption key.
-func UnwrapKey(kek []byte, wrapped Envelope) ([]byte, error)
+func UnwrapKey(kek []byte, wrapped Envelope) ([]byte, error) {
+	return nil, nil
+}

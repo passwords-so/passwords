@@ -8,7 +8,11 @@ type Envelope struct {
 }
 
 // Encrypt seals plaintext with authenticated encryption.
-func Encrypt(key []byte, plaintext []byte, aad []byte) (Envelope, error)
+func Encrypt(key []byte, plaintext []byte, aad []byte) (Envelope, error) {
+	return Envelope{}, nil
+}
 
 // Decrypt opens an encrypted envelope and verifies its authenticated data.
-func Decrypt(key []byte, envelope Envelope, aad []byte) ([]byte, error)
+func Decrypt(key []byte, envelope Envelope, aad []byte) ([]byte, error) {
+	return nil, nil
+}
