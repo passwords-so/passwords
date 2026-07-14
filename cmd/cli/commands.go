@@ -2,13 +2,19 @@ package cli
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/novembersoftware/passwords/internal/cli"
 )
 
 // runInit creates a new vault file.
 func runInit(ctx context.Context, backend Backend, args []string) error {
-	name, password, err := cli.InitVaultForm()
+	name := args[0]
+	if err := cli.ValidateInput(name, cli.VaultNameRuleset); err != nil {
+		return fmt.Errorf("invalid vault name: %w", err)
+	}
+
+	password, err := cli.InitVaultForm()
 	if err != nil {
 		return err
 	}

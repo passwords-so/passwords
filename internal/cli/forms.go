@@ -2,19 +2,16 @@ package cli
 
 import (
 	"errors"
+	"strings"
 
 	"charm.land/huh/v2"
 )
 
-func InitVaultForm() (string, string, error) {
-	var name, password, confirmPassword string
+func InitVaultForm() (password string, err error) {
+	var confirmPassword string
 
 	form := huh.NewForm(
 		huh.NewGroup(
-			huh.NewInput().
-				Title("Vault name").
-				Value(&name).
-				Validate(required),
 			huh.NewInput().
 				Title("Password").
 				EchoMode(huh.EchoModePassword).
@@ -37,28 +34,16 @@ func InitVaultForm() (string, string, error) {
 	)
 
 	if err := form.Run(); err != nil {
-		return "", "", err
+		return "", err
 	}
 
-	return name, password, nil
+	return password, nil
 }
 
+// a wrapper around cli.ValidateInput to satisy huh
 func validatePassword(value string) error {
-	if err := required(value); err != nil {
-		return err
+	if err := ValidateInput(value, VaultPasswordRuleset); err != nil {
+		return errors.New(strings.ReplaceAll(err.Error(), "input", "password"))
 	}
-
-	if len(value) < 8 {
-		return errors.New("password must be at least 8 characters long")
-	}
-
-	return nil
-}
-
-func required(value string) error {
-	if value == "" {
-		return errors.New("this field is required")
-	}
-
 	return nil
 }
