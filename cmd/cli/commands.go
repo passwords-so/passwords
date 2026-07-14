@@ -1,9 +1,22 @@
 package cli
 
-import "context"
+import (
+	"context"
+
+	"github.com/novembersoftware/passwords/internal/cli"
+)
 
 // runInit creates a new vault file.
-func runInit(ctx context.Context, backend Backend, args []string) error
+func runInit(ctx context.Context, backend Backend, args []string) error {
+	name, password, err := cli.InitVaultForm()
+	if err != nil {
+		return err
+	}
+	if err = backend.Create(ctx, name, password); err != nil {
+		return err
+	}
+	return nil
+}
 
 // runUnlock verifies the master password and opens an in-memory session.
 func runUnlock(ctx context.Context, backend Backend, args []string) error

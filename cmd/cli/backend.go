@@ -8,8 +8,8 @@ import (
 
 // Backend is the CLI's narrow view of the password-manager backend.
 type Backend interface {
-	Create(ctx context.Context, name string, password []byte) error
-	Unlock(ctx context.Context, password []byte) error
+	Create(ctx context.Context, name, pasword string) error
+	Unlock(ctx context.Context, password string) error
 	Lock()
 	IsUnlocked() bool
 	AddLogin(ctx context.Context, input vault.AddLoginInput) (vault.VaultItem, error)
