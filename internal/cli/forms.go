@@ -7,6 +7,7 @@ import (
 	"charm.land/huh/v2"
 )
 
+// InitVaultForm prompts the user to enter a password and confirm it
 func InitVaultForm() (password string, err error) {
 	var confirmPassword string
 
