@@ -4,7 +4,7 @@ import (
 	"context"
 	"time"
 
-	"github.com/novembersoftware/passwords/internal/envelope"
+	"github.com/novmbrs/passwords/internal/envelope"
 )
 
 // Store is the persistence boundary used by the vault backend.

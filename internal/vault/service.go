@@ -3,7 +3,7 @@ package vault
 import (
 	"context"
 
-	"github.com/novembersoftware/passwords/internal/storage"
+	"github.com/novmbrs/passwords/internal/storage"
 )
 
 // Service is the core password-manager backend.

@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/novembersoftware/passwords/internal/app"
-	"github.com/novembersoftware/passwords/internal/utils"
+	"github.com/novmbrs/passwords/internal/app"
+	"github.com/novmbrs/passwords/internal/utils"
 )
 
 func RunInitCmd(ctx context.Context, backend app.Backend, args []string) error {

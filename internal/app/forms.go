@@ -5,7 +5,7 @@ import (
 	"strings"
 
 	"charm.land/huh/v2"
-	"github.com/novembersoftware/passwords/internal/utils"
+	"github.com/novmbrs/passwords/internal/utils"
 )
 
 // InitVaultForm prompts the user to enter a password and confirm it

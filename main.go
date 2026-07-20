@@ -3,7 +3,7 @@ package main
 import (
 	"os"
 
-	"github.com/novembersoftware/passwords/cmd"
+	"github.com/novmbrs/passwords/cmd"
 )
 
 func main() {

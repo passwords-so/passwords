@@ -3,7 +3,7 @@ package app
 import (
 	"context"
 
-	"github.com/novembersoftware/passwords/internal/vault"
+	"github.com/novmbrs/passwords/internal/vault"
 )
 
 // Backend is the CLI's narrow view of the password-manager backend.

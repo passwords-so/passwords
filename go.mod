@@ -1,4 +1,4 @@
-module github.com/novembersoftware/passwords
+module github.com/novmbrs/passwords
 
 go 1.26.4
 

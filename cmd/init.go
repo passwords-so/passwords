@@ -1,8 +1,8 @@
 package cmd
 
 import (
-	"github.com/novembersoftware/passwords/internal/app"
-	"github.com/novembersoftware/passwords/internal/app/commands"
+	"github.com/novmbrs/passwords/internal/app"
+	"github.com/novmbrs/passwords/internal/app/commands"
 	"github.com/spf13/cobra"
 )
 
