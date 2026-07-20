@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"github.com/novmbrs/passwords/internal/config"
 	"github.com/spf13/cobra"
 )
 
@@ -28,6 +29,10 @@ func init() {
 }
 
 func Execute() int {
+	if err := config.Load(); err != nil {
+		return 1
+	}
+
 	if err := rootCmd.Execute(); err != nil {
 		return 1
 	}
