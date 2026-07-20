@@ -20,12 +20,15 @@ var (
 		Short:        "A local password manager",
 		Long:         "A local, offline, secure, and open-source password manager.",
 		SilenceUsage: true,
+		RunE: func(cmd *cobra.Command, args []string) error {
+			// start the tui
+			return nil
+		},
 	}
 )
 
 func init() {
-	rootCmd.PersistentFlags().StringVar(&vaultPath, "vault", "passwords.db", "path to the local vault database")
-	rootCmd.MarkFlagRequired("vault")
+	rootCmd.Flags().StringVar(&vaultPath, "vault", "", "path to the vault you want to use")
 }
 
 func Execute() int {
