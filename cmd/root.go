@@ -4,6 +4,13 @@ import (
 	"github.com/spf13/cobra"
 )
 
+/*
+* $ passwords // runs the tui
+* $ passwords init // create a new vault
+* $ passwords unlock // unlocks the vault for some time
+* $ passwords lock // locks the vault
+ */
+
 var (
 	vaultPath string
 
