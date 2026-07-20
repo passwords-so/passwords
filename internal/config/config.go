@@ -5,10 +5,15 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
-	"strings"
 
 	"github.com/spf13/viper"
 )
+
+type Config struct {
+	VaultsDir string `mapstructure:"vaults_dir"`
+}
+
+var C Config
 
 // Load configures Viper and reads an optional config file.
 func Load() error {
@@ -21,15 +26,15 @@ func Load() error {
 	viper.AddConfigPath(filepath.Join(configDir, "passwords"))
 	viper.AddConfigPath(".")
 
-	viper.SetEnvPrefix("PASSWORDS")
-	viper.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
-	viper.AutomaticEnv()
-
 	if err := viper.ReadInConfig(); err != nil {
 		var notFound viper.ConfigFileNotFoundError
 		if !errors.As(err, &notFound) {
 			return fmt.Errorf("read config: %w", err)
 		}
+	}
+
+	if err := viper.Unmarshal(&C); err != nil {
+		return fmt.Errorf("decode config: %w", err)
 	}
 
 	return nil
