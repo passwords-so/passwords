@@ -1,6 +1,8 @@
 package cmd
 
 import (
+	"log/slog"
+
 	"github.com/novmbrs/passwords/internal/config"
 	"github.com/spf13/cobra"
 )
@@ -33,10 +35,12 @@ func init() {
 
 func Execute() int {
 	if err := config.Load(); err != nil {
+		slog.Error("failed to load config", "error", err)
 		return 1
 	}
 
 	if err := rootCmd.Execute(); err != nil {
+		slog.Error("failed to execute command", "error", err)
 		return 1
 	}
 	return 0
