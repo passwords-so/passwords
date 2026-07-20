@@ -12,6 +12,7 @@ import (
 )
 
 type Config struct {
+	RootDir   string `mapstructure:"-"`
 	VaultsDir string `mapstructure:"vaults_dir"`
 }
 
@@ -20,17 +21,29 @@ var IsDev bool
 
 // Load configures Viper and reads an optional config file.
 func Load() error {
-	if err := setDefaults(); err != nil {
+	rootDir, err := DefaultRootDir()
+	if err != nil {
 		return err
 	}
 
-	if err := ensureConfigFile(); err != nil {
+	if err := os.MkdirAll(rootDir, 0o700); err != nil {
+		return fmt.Errorf("create passwords directory: %w", err)
+	}
+
+	configPath := filepath.Join(rootDir, "config.yaml")
+	viper.SetConfigFile(configPath)
+	viper.SetConfigType("yaml")
+	viper.SetConfigPermissions(0o600)
+	viper.SetDefault("vaults_dir", filepath.Join(rootDir, "vaults"))
+
+	if err := ensureConfigFile(configPath); err != nil {
 		return err
 	}
 
 	if err := viper.Unmarshal(&C); err != nil {
 		return fmt.Errorf("decode config: %w", err)
 	}
+	C.RootDir = rootDir
 
 	if err := os.MkdirAll(C.VaultsDir, 0o700); err != nil {
 		return fmt.Errorf("create vaults directory: %w", err)
@@ -44,29 +57,11 @@ func LoadEnv() error {
 		return fmt.Errorf("load .env: %w", err)
 	}
 
-	if env := os.Getenv("PASSWORDS_ENV"); env != "" {
-		IsDev = env == "dev"
-	}
+	IsDev = os.Getenv("PASSWORDS_ENV") == "dev"
 	return nil
 }
 
-func ensureConfigFile() error {
-	userConfigDir, err := os.UserConfigDir()
-	if err != nil {
-		return fmt.Errorf("find user config directory: %w", err)
-	}
-
-	configDir := filepath.Join(userConfigDir, "passwords")
-	configPath := filepath.Join(configDir, "config.yaml")
-
-	if err := os.MkdirAll(configDir, 0o700); err != nil {
-		return fmt.Errorf("create config directory: %w", err)
-	}
-
-	viper.SetConfigFile(configPath)
-	viper.SetConfigType("yaml")
-	viper.SetConfigPermissions(0o600)
-
+func ensureConfigFile(configPath string) error {
 	if err := viper.ReadInConfig(); err != nil {
 		if !errors.Is(err, fs.ErrNotExist) {
 			return fmt.Errorf("read config: %w", err)
@@ -79,29 +74,21 @@ func ensureConfigFile() error {
 	return nil
 }
 
-func setDefaults() error {
-	dataDir, err := defaultDataDir()
-	if err != nil {
-		return err
-	}
-
-	viper.SetDefault(
-		"vaults_dir",
-		filepath.Join(dataDir, "passwords", "vaults"),
+// DefaultRootDir returns the directory containing all passwords application files.
+func DefaultRootDir() (string, error) {
+	var (
+		baseDir string
+		err     error
 	)
 
-	return nil
-}
-
-func defaultDataDir() (string, error) {
-	if dataDir := os.Getenv("XDG_DATA_HOME"); dataDir != "" {
-		return dataDir, nil
+	if IsDev {
+		baseDir, err = os.Getwd()
+	} else {
+		baseDir, err = os.UserHomeDir()
 	}
-
-	homeDir, err := os.UserHomeDir()
 	if err != nil {
-		return "", fmt.Errorf("find user home directory: %w", err)
+		return "", fmt.Errorf("find passwords root directory: %w", err)
 	}
 
-	return filepath.Join(homeDir, ".local", "share"), nil
+	return filepath.Join(baseDir, ".passwords"), nil
 }
