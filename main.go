@@ -3,9 +3,9 @@ package main
 import (
 	"os"
 
-	"github.com/novembersoftware/passwords/cmd/cli"
+	"github.com/novembersoftware/passwords/cmd"
 )
 
 func main() {
-	os.Exit(cli.Execute())
+	os.Exit(cmd.Execute())
 }

@@ -1,10 +1,11 @@
-package cli
+package app
 
 import (
 	"errors"
 	"strings"
 
 	"charm.land/huh/v2"
+	"github.com/novembersoftware/passwords/internal/utils"
 )
 
 // InitVaultForm prompts the user to enter a password and confirm it
@@ -43,7 +44,7 @@ func InitVaultForm() (password string, err error) {
 
 // a wrapper around cli.ValidateInput to satisy huh
 func validatePassword(value string) error {
-	if err := ValidateInput(value, VaultPasswordRuleset); err != nil {
+	if err := utils.ValidateInput(value, utils.VaultPasswordRuleset); err != nil {
 		return errors.New(strings.ReplaceAll(err.Error(), "input", "password"))
 	}
 	return nil
