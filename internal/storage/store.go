@@ -4,7 +4,7 @@ import (
 	"context"
 	"time"
 
-	"github.com/novmbrs/passwords/internal/envelope"
+	"github.com/novmbrs/passwords/internal/vaultcrypto"
 )
 
 // Store is the persistence boundary used by the vault backend.
@@ -19,21 +19,20 @@ type Store interface {
 
 // VaultHeader is safe metadata plus the encrypted vault key.
 type VaultHeader struct {
-	ID         string
-	Name       string
-	Version    int
-	KDF        envelope.KDFParams
-	WrappedKey envelope.Envelope
-	CreatedAt  time.Time
-	UpdatedAt  time.Time
+	ID           string
+	Name         string
+	Version      int
+	PasswordSlot vaultcrypto.PasswordSlot
+	CreatedAt    time.Time
+	UpdatedAt    time.Time
 }
 
 // EncryptedItemRecord is one encrypted vault item as stored on disk.
 type EncryptedItemRecord struct {
-	ID        string
-	Kind      string
-	Version   int
-	Envelope  envelope.Envelope
-	CreatedAt time.Time
-	UpdatedAt time.Time
+	ID         string
+	Kind       string
+	Version    int
+	Ciphertext vaultcrypto.Ciphertext
+	CreatedAt  time.Time
+	UpdatedAt  time.Time
 }
