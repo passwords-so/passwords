@@ -2,8 +2,11 @@ package vault
 
 import (
 	"context"
+	"time"
 
 	"github.com/novmbrs/passwords/internal/storage"
+	"github.com/novmbrs/passwords/internal/utils"
+	"github.com/novmbrs/passwords/internal/vaultcrypto"
 )
 
 // Service is the core password-manager backend.
@@ -20,16 +23,51 @@ func NewService(store storage.Store) *Service {
 
 // Create initializes a new encrypted vault.
 func (s *Service) Create(ctx context.Context, name string, password []byte) error {
-	// Create password-derivation settings and derive a key from the password.
-	// Generate a random vault key and wrap it with the password-derived key.
-	// Save the new vault header and start an empty unlocked session.
+	// Generate the vault ID before creating its password slot.
+	// Ask vaultcrypto to create a random vault key wrapped by the master password.
+	// Save the password slot in the new vault header.
+	// Start an empty unlocked session containing the plaintext vault key.
+
+	id := utils.GenerateID("vault")
+	vaultKey, slot, err := vaultcrypto.CreatePasswordSlot(password, id)
+	if err != nil {
+		clear(vaultKey)
+		return err
+	}
+
+	now := time.Now().UTC()
+	header := storage.VaultHeader{
+		Version:      slot.Version,
+		ID:           id,
+		Name:         name,
+		PasswordSlot: slot,
+		CreatedAt:    now,
+		UpdatedAt:    now,
+	}
+
+	if err := s.store.SaveHeader(ctx, header); err != nil {
+		return err
+	}
+
+	s.session = &Session{
+		vault: &Vault{
+			ID:        id,
+			Name:      name,
+			Version:   1,
+			CreatedAt: now,
+			UpdatedAt: now,
+			Items:     make(map[string]VaultItem),
+		},
+		vaultKey: vaultKey,
+	}
+
 	return nil
 }
 
 // Unlock loads the vault, verifies the password, and opens an in-memory session.
 func (s *Service) Unlock(ctx context.Context, password []byte) error {
-	// Load the vault header and derive a key from the supplied password.
-	// Unwrap the vault key; failure means the password is incorrect.
+	// Load the vault header and ask vaultcrypto to open its password slot.
+	// Treat a failed open as a generic unlock failure.
 	// Load and decrypt every stored item into a new in-memory session.
 	return nil
 }
