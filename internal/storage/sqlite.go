@@ -74,15 +74,87 @@ func NewSQLiteStore(ctx context.Context, path string) (*SQLiteStore, error) {
 
 // Migrate creates or updates the SQLite schema used by the vault.
 func (s *SQLiteStore) Migrate(ctx context.Context) error {
-	// Begin a transaction so each schema upgrade is applied atomically.
-	// Roll the transaction back unless every migration step succeeds.
-	// Read SQLite's user_version to determine the current schema version.
-	// Reject a database created by a newer unsupported application version.
-	// Apply each missing migration in order without skipping versions.
-	// Create the singleton vault-header table in the initial migration.
-	// Create the encrypted-items table and any required indexes.
-	// Update user_version only after the matching schema changes succeed.
-	// Commit once the database reaches the current schema version.
+	if s == nil || s.db == nil {
+		return fmt.Errorf("migrate SQLite database: database is not open")
+	}
+	if len(schemaMigrations) == 0 {
+		return fmt.Errorf("migrate SQLite database: no migrations are registered")
+	}
+
+	for index, migration := range schemaMigrations {
+		expectedVersion := index + 1
+		if migration.version != expectedVersion {
+			return fmt.Errorf(
+				"invalid SQLite migration manifest: expected version %d, found %d",
+				expectedVersion,
+				migration.version,
+			)
+		}
+	}
+	currentSchemaVersion := len(schemaMigrations)
+
+	tx, err := s.db.BeginTx(ctx, nil)
+	if err != nil {
+		return fmt.Errorf("begin SQLite migration: %w", err)
+	}
+	defer func() {
+		_ = tx.Rollback()
+	}()
+
+	var schemaVersion int
+	if err := tx.QueryRowContext(ctx, "PRAGMA user_version").Scan(&schemaVersion); err != nil {
+		return fmt.Errorf("read SQLite schema version: %w", err)
+	}
+	if schemaVersion > currentSchemaVersion {
+		return fmt.Errorf(
+			"unsupported SQLite schema version: database is %d, application supports %d",
+			schemaVersion,
+			currentSchemaVersion,
+		)
+	}
+
+	for _, migration := range schemaMigrations {
+		if migration.version <= schemaVersion {
+			continue
+		}
+		if migration.version != schemaVersion+1 {
+			return fmt.Errorf(
+				"invalid SQLite migration order: expected version %d, found %d",
+				schemaVersion+1,
+				migration.version,
+			)
+		}
+
+		if _, err := tx.ExecContext(ctx, migration.sql); err != nil {
+			return fmt.Errorf(
+				"apply SQLite schema version %d (%s): %w",
+				migration.version,
+				migration.name,
+				err,
+			)
+		}
+		if _, err := tx.ExecContext(
+			ctx,
+			fmt.Sprintf("PRAGMA user_version = %d", migration.version),
+		); err != nil {
+			return fmt.Errorf("record SQLite schema version %d: %w", migration.version, err)
+		}
+
+		schemaVersion = migration.version
+	}
+
+	if schemaVersion != currentSchemaVersion {
+		return fmt.Errorf(
+			"incomplete SQLite migration manifest: reached version %d, expected %d",
+			schemaVersion,
+			currentSchemaVersion,
+		)
+	}
+
+	if err := tx.Commit(); err != nil {
+		return fmt.Errorf("commit SQLite migration: %w", err)
+	}
+
 	return nil
 }
 
