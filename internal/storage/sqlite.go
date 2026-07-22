@@ -160,8 +160,6 @@ func (s *SQLiteStore) Migrate(ctx context.Context) error {
 
 // Close releases the SQLite database handle.
 func (s *SQLiteStore) Close() error {
-	// Treat an absent database handle as already closed.
-	// Close the database handle and return any pending SQLite error.
 	if s.db == nil {
 		return nil
 	}
@@ -169,6 +167,7 @@ func (s *SQLiteStore) Close() error {
 	if err := s.db.Close(); err != nil {
 		return fmt.Errorf("close SQLite database: %w", err)
 	}
+
 	return nil
 }
 
