@@ -2,15 +2,22 @@ package storage
 
 import (
 	"context"
+	"errors"
 	"time"
 
 	"github.com/novmbrs/passwords/internal/vaultcrypto"
 )
 
+var (
+	ErrVaultNotInitialized     = errors.New("vault not initialized")
+	ErrVaultAlreadyInitialized = errors.New("vault already initialized")
+	ErrItemNotFound            = errors.New("item not found")
+)
+
 // Store is the persistence boundary used by the vault backend.
 type Store interface {
 	LoadHeader(ctx context.Context) (VaultHeader, error)
-	SaveHeader(ctx context.Context, header VaultHeader) error
+	CreateHeader(ctx context.Context, header VaultHeader) error
 	ListItems(ctx context.Context) ([]EncryptedItemRecord, error)
 	GetItem(ctx context.Context, id string) (EncryptedItemRecord, error)
 	PutItem(ctx context.Context, item EncryptedItemRecord) error

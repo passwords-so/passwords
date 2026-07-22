@@ -45,7 +45,7 @@ func (s *Service) Create(ctx context.Context, name string, password []byte) erro
 		UpdatedAt:    now,
 	}
 
-	if err := s.store.SaveHeader(ctx, header); err != nil {
+	if err := s.store.CreateHeader(ctx, header); err != nil {
 		return err
 	}
 
